@@ -4,11 +4,12 @@ const { BAD_REQUEST, NOT_FOUND, SERVER_ERROR } = require("../utils/errors");
 const getItems = (req, res) => {
   ClothingItem.find({})
     .then((items) => res.status(200).send(items))
-    .catch((err) =>
+    .catch((err) => {
+      console.error(err);
       res
         .status(SERVER_ERROR)
-        .send({ message: "An error has occurred on the server." })
-    );
+        .send({ message: "An error has occurred on the server." });
+    });
 };
 
 const createItem = (req, res) => {
@@ -38,7 +39,7 @@ const deleteItem = (req, res) => {
       console.error(err.name);
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: "Item not found" });
-      } else if (err.name === "CastError") {
+      } if (err.name === "CastError") {
         return res
           .status(BAD_REQUEST)
           .send({ message: "Invalid item ID format" });
