@@ -39,7 +39,8 @@ const deleteItem = (req, res) => {
       console.error(err.name);
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: "Item not found" });
-      } if (err.name === "CastError") {
+      }
+      if (err.name === "CastError") {
         return res
           .status(BAD_REQUEST)
           .send({ message: "Invalid item ID format" });
@@ -50,7 +51,7 @@ const deleteItem = (req, res) => {
     });
 };
 
-const likeItem = (req, res, next) => {
+const likeItem = (req, res) => {
   ClothingItem.findByIdAndUpdate(
     req.params.itemId,
     { $addToSet: { likes: req.user._id } },
@@ -67,11 +68,13 @@ const likeItem = (req, res, next) => {
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: "User not found" });
       }
-      return next(err);
+      return res
+        .status(SERVER_ERROR)
+        .send({ message: "An error has occurred on the server." });
     });
 };
 
-const dislikeItem = (req, res, next) => {
+const dislikeItem = (req, res) => {
   ClothingItem.findByIdAndUpdate(
     req.params.itemId,
     { $pull: { likes: req.user._id } },
@@ -88,7 +91,9 @@ const dislikeItem = (req, res, next) => {
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: "User not found" });
       }
-      return next(err);
+      return res
+        .status(SERVER_ERROR)
+        .send({ message: "An error has occurred on the server." });
     });
 };
 
