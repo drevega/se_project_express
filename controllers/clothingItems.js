@@ -1,5 +1,10 @@
 const ClothingItem = require("../models/clothingItem");
-const { BAD_REQUEST, NOT_FOUND, SERVER_ERROR } = require("../utils/errors");
+const {
+  BAD_REQUEST,
+  NOT_FOUND,
+  SERVER_ERROR,
+  FORBIDDEN,
+} = require("../utils/errors");
 
 const getItems = (req, res) => {
   ClothingItem.find({})
@@ -31,10 +36,23 @@ const createItem = (req, res) => {
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
+  const userId = req.user._id; // Who's trying to delete the item?
 
-  ClothingItem.findByIdAndDelete(itemId)
+  ClothingItem.findById(itemId)
     .orFail()
-    .then((item) => res.status(200).send({ message: "Item deleted", item }))
+    .then((item) => {
+      // does the item belong to the user?
+      if (item.owner.toString() !== userId) {
+        // Nope! Send error
+        return res.status(FORBIDDEN).send({
+          message: "You do not have permission to delete this item.",
+        });
+      }
+      // If owner, delete the item
+      return item.deleteOne().then(() => {
+        res.status(200).send({ message: "Item deleted", item });
+      });
+    })
     .catch((err) => {
       console.error(err.name);
       if (err.name === "DocumentNotFoundError") {
@@ -66,7 +84,7 @@ const likeItem = (req, res) => {
           .send({ message: "Invalid user ID format" });
       }
       if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND).send({ message: "User not found" });
+        return res.status(NOT_FOUND).send({ message: "Item not found" });
       }
       return res
         .status(SERVER_ERROR)
@@ -89,7 +107,7 @@ const dislikeItem = (req, res) => {
           .send({ message: "Invalid user ID format" });
       }
       if (err.name === "DocumentNotFoundError") {
-        return res.status(NOT_FOUND).send({ message: "User not found" });
+        return res.status(NOT_FOUND).send({ message: "Item not found" });
       }
       return res
         .status(SERVER_ERROR)
