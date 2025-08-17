@@ -81,7 +81,7 @@ const likeItem = (req, res) => {
       if (err.name === "CastError") {
         return res
           .status(BAD_REQUEST)
-          .send({ message: "Invalid user ID format" });
+          .send({ message: "Invalid item ID format" });
       }
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: "Item not found" });
@@ -104,7 +104,7 @@ const dislikeItem = (req, res) => {
       if (err.name === "CastError") {
         return res
           .status(BAD_REQUEST)
-          .send({ message: "Invalid user ID format" });
+          .send({ message: "Invalid item ID format" });
       }
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: "Item not found" });
