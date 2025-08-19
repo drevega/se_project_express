@@ -1,6 +1,6 @@
 const router = require("express").Router();
+
 const {
-  getItems,
   createItem,
   deleteItem,
   likeItem,
@@ -8,7 +8,6 @@ const {
 } = require("../controllers/clothingItems");
 
 // All routes here are protected by the auth middleware
-router.get("/", getItems);
 router.post("/", createItem);
 router.delete("/:itemId", deleteItem);
 router.put("/:itemId/likes", likeItem);
