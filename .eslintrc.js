@@ -4,6 +4,9 @@ module.exports = {
     node: true,
   },
   extends: ["eslint:recommended", "airbnb-base", "prettier"],
+  rules: {
+    "no-unused-vars": ["error", { argsIgnorePattern: "next" }],
+  },
   overrides: [
     {
       env: {

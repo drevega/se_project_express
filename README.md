@@ -27,5 +27,10 @@ Database: MongoDB with Mongoose
 
 Tools: Postman for testing, Nodemon for dev, dotenv for env vars
 
+## Links 🚀
+
+[Front-End GitHub](https://github.com/drevega/se_project_react.git)
+
+[FigmaDesign](https://www.figma.com/design/bfVOvqlLmoKZ5lpro8WWBe/Sprint-14_-WTWR?node-id=1-1546&t=SGohBPpxiJ3Ij3nn-0)
 <!-- ### Testing
 Before committing your code, make sure you edit the file `sprint.txt` in the root folder. The file `sprint.txt` should contain the number of the sprint you're currently working on. For ex. 12 -->

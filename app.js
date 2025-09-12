@@ -1,10 +1,14 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+require('dotenv').config();
 const helmet = require("helmet");
-
+const { errors } = require("celebrate");
+const { requestLogger, errorLogger } = require("./middlewares/logger");
 const mainRouter = require("./routes"); // contains /users and /items routes
-const { NOT_FOUND } = require("./utils/errors");
+
+const errorHandler = require("./middlewares/error-handler");
+const { NotFoundError } = require("./utils/customErrors");
 
 const app = express();
 const { PORT = 3001 } = process.env;
@@ -16,14 +20,28 @@ mongoose
   })
   .catch(console.error);
 
-app.use(helmet());
+app.use(helmet()); // help protect from web vulnerabilities by setting HTTP headers appropriately
 app.use(express.json()); // Middleware to parse JSON bodies
-app.use(cors());
+app.use(cors()); // Enable CORS for all routes
 
+// Request logger - 1st after basic setup
+app.use(requestLogger);
+
+// Main router handles all API routes
 app.use("/", mainRouter);
 
+// Error logger - after routes, before error handlers
+app.use(errorLogger);
+
+// Celebrate error handler
+app.use(errors());
+
+// Centralized error handler
+app.use(errorHandler);
+
+// Not found router handler for non-existent routes
 app.use((req, res) => {
-  res.status(NOT_FOUND).send({ message: "Requested resource not found" });
+  res.status(NotFoundError).send({ message: "Requested resource not found" });
 });
 
 app.listen(PORT, () => {
