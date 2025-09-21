@@ -1,3 +1,5 @@
+// Controllers for user routes
+
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { JWT_SECRET } = require("../utils/config");
@@ -16,7 +18,7 @@ const {
 const createUser = (req, res, next) => {
   const { name, avatar, email, password } = req.body;
 
-  // ADDED: Validate email and password
+  // Validate email and password
   bcrypt
     .hash(password, SALT_ROUNDS)
     .then((hashedPassword) =>

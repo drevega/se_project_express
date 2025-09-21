@@ -1,3 +1,5 @@
+// contollers for clothing items routes
+
 const ClothingItem = require("../models/clothingItem");
 const {
   BadRequestError,
@@ -48,8 +50,8 @@ const deleteItem = (req, res, next) => {
         res.status(200).send({ message: "Item deleted", item });
       });
     })
+    // Handle errors
     .catch((err) => {
-      // console.error(err.name);
       if (err.name === "DocumentNotFoundError") {
         return next(new BadRequestError("Invalid item ID format"));
       }
@@ -58,8 +60,9 @@ const deleteItem = (req, res, next) => {
       }
       // catch above forbidden error
       if (err.name === "ForbiddenError") {
+        return next(new ForbiddenError("You cannot delete this item"));
       }
-      return next(err);
+      return next(err); // handles any other unhandled errors
     });
 };
 

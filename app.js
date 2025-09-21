@@ -1,3 +1,5 @@
+// Main entry point for the Express server
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -26,6 +28,14 @@ app.use(cors()); // Enable CORS for all routes
 
 // Request logger - 1st after basic setup
 app.use(requestLogger);
+
+
+// Crash test route for testing server resilience - remove in production
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Server will crash now');
+  }, 0);
+});
 
 // Main router handles all API routes
 app.use("/", mainRouter);

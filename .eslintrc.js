@@ -6,6 +6,8 @@ module.exports = {
   extends: ["eslint:recommended", "airbnb-base", "prettier"],
   rules: {
     "no-unused-vars": ["error", { argsIgnorePattern: "next" }],
+    "no-console": ["warn", { allow: ["error"] }],
+    "no-underscore-dangle": ["error", { allow: ["_id"] }],
   },
   overrides: [
     {
@@ -21,9 +23,5 @@ module.exports = {
   parserOptions: {
     ecmaVersion: "latest",
     sourceType: "module",
-  },
-  rules: {
-    "no-console": ["warn", { allow: ["error"] }],
-    "no-underscore-dangle": ["error", { allow: ["_id"] }],
   },
 };

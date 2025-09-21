@@ -1,3 +1,5 @@
+// verification for clothing item data
+
 const mongoose = require("mongoose");
 const validator = require("validator");
 

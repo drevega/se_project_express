@@ -1,3 +1,5 @@
+// Logger middleware using winston and express-winston
+
 const winston = require('winston');
 const expressWinston = require('express-winston');
 
@@ -5,7 +7,7 @@ const expressWinston = require('express-winston');
 const messageFormat = winston.format.combine(
   winston.format.timestamp(),
   winston.format.printf(
-    ({ level, message, meta, timestamp }) =>
+    ({ level, message, timestamp }) =>
       // This format is great for console viewing
       `${timestamp} ${level}: ${message}`,
   ),
