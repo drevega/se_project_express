@@ -24,7 +24,7 @@ const createItem = (req, res, next) => {
       console.error(err.name);
       if (err.name === "ValidationError") {
         // used next() with custom error
-        return next(new BadRequestError("Invalid item data"));
+        return next(BadRequestError("Invalid item data"));
       }
       // passed any other error to defaulf 500 handler
       return next(err);
@@ -41,9 +41,7 @@ const deleteItem = (req, res, next) => {
       // does the item belong to the user?
       if (item.owner.toString() !== userId) {
         // Nope! throw forbidden error
-        throw new ForbiddenError(
-          "You do not have permission to delete this item."
-        );
+        throw ForbiddenError("You do not have permission to delete this item.");
       }
       // If owner, delete the item
       return item.deleteOne().then(() => {
@@ -53,14 +51,14 @@ const deleteItem = (req, res, next) => {
     // Handle errors
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
-        return next(new BadRequestError("Invalid item ID format"));
+        return next(NotFoundError("Invalid item ID format"));
       }
       if (err.name === "CastError") {
-        return next(new BadRequestError("Invalid item ID format"));
+        return next(BadRequestError("Invalid item ID format"));
       }
       // catch above forbidden error
       if (err.name === "ForbiddenError") {
-        return next(new ForbiddenError("You cannot delete this item"));
+        return next(ForbiddenError("You cannot delete this item"));
       }
       return next(err); // handles any other unhandled errors
     });
@@ -76,10 +74,10 @@ const likeItem = (req, res, next) => {
     .then((item) => res.status(200).send(item))
     .catch((err) => {
       if (err.name === "CastError") {
-        return next(new BadRequestError("Invalid item ID format"));
+        return next(BadRequestError("Invalid item ID format"));
       }
       if (err.name === "DocumentNotFoundError") {
-        return next(new NotFoundError("Item not found"));
+        return next(NotFoundError("Item not found"));
       }
       return next(err);
     });
@@ -95,10 +93,10 @@ const dislikeItem = (req, res, next) => {
     .then((item) => res.status(200).send(item))
     .catch((err) => {
       if (err.name === "CastError") {
-        return next(new BadRequestError("Invalid item Id format"));
+        return next(BadRequestError("Invalid item Id format"));
       }
       if (err.name === "DocumentNotFoundError") {
-        return next(new NotFoundError("Item not found"));
+        return next(NotFoundError("Item not found"));
       }
       return next(err);
     });

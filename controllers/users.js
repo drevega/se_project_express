@@ -37,12 +37,10 @@ const createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.code === 11000) {
-        return next(new ConflictError("Email already in use"));
+        return next(ConflictError("Email already in use"));
       }
       if (err.name === "ValidationError") {
-        return next(
-          new BadRequestError("Invalid data passed when creating user")
-        );
+        return next(BadRequestError("Invalid data passed when creating user"));
       }
       return next(err);
     });
@@ -50,6 +48,10 @@ const createUser = (req, res, next) => {
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
+
+  if (!email || !password) {
+    return next(BadRequestError("Invalid data passed when creating user"));
+  }
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
@@ -59,7 +61,7 @@ const login = (req, res, next) => {
       res.send({ token });
     })
     .catch(() => {
-      next(new UnauthorizedError("Incorrect email or password"));
+      next(UnauthorizedError("Incorrect email or password"));
     });
 };
 
@@ -73,7 +75,7 @@ const getCurrentUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
-        return next(new NotFoundError("User not found"));
+        return next(NotFoundError("User not found"));
       }
       return next(err);
     });
@@ -95,10 +97,10 @@ const updateProfile = (req, res, next) => {
     .then((updatedUser) => res.send(updatedUser))
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
-        return next(new NotFoundError("User not found"));
+        return next(NotFoundError("User not found"));
       }
       if (err.name === "ValidationError") {
-        return next(new BadRequestError("Invalid user data"));
+        return next(BadRequestError("Invalid user data"));
       }
       return next(err);
     });
